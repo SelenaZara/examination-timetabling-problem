@@ -198,7 +198,7 @@ If you find this project useful or would like to support further development:
 
 ## About This Project
 
-This system was developed during my **postgraduate studies** at Universiti Malaysia Pahang (UMP). Due to personal circumstances, I was unable to complete my postgraduate programme — but rather than leaving this work behind, I have chosen to release it publicly so it can be of benefit to researchers, students, and developers around the world.
+This system was developed during my postgraduate studies at Universiti Malaysia Pahang (UMP). Due to personal circumstances, I was unable to complete my postgraduate programme — but rather than leaving this work behind, I have chosen to release it publicly so it can be of benefit to researchers, students, and developers around the world.
 
 I hope this project serves as a useful reference or foundation for anyone working on examination timetabling, combinatorial optimization, or related academic scheduling problems.
 
@@ -206,9 +206,7 @@ I hope this project serves as a useful reference or foundation for anyone workin
 
 ## Acknowledgements
 
-A heartfelt thank you to **Dr. Nizam** from Universiti Malaysia Pahang (UMP) for his invaluable guidance, mentorship, and patience throughout this research. His expertise in the domain and generous sharing of the UMP examination dataset made this project possible.
-
-> *"Whatever you do, do it wholeheartedly."*
+A heartfelt thank you to my supervisor **Profesor Madya Dr. Mohd Nizam Bin Mohmad Kahar** from Universiti Malaysia Pahang (UMP) for his invaluable guidance, mentorship, and patience throughout this research. His expertise in the domain and generous sharing of the UMP examination dataset made this project possible.
 
 ---
 
