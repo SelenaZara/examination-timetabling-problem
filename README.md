@@ -196,18 +196,19 @@ If you find this project useful or would like to support further development:
 
 ---
 
-## References & Citation
+## About This Project
 
-If you use this work or framework in your research, please cite:
+This system was developed during my **postgraduate studies** at Universiti Malaysia Pahang (UMP). Due to personal circumstances, I was unable to complete my postgraduate programme — but rather than leaving this work behind, I have chosen to release it publicly so it can be of benefit to researchers, students, and developers around the world.
 
-```bibtex
-@article{shokkan2020solving,
-  title={Solving UMP Examination Timetabling Problem Using Metaheuristic Method},
-  author={Shokkan, F. N. M. and Kahar, M. N. M.},
-  journal={Faculty of Computing, Universiti Malaysia Pahang},
-  year={2020}
-}
-```
+I hope this project serves as a useful reference or foundation for anyone working on examination timetabling, combinatorial optimization, or related academic scheduling problems.
+
+---
+
+## Acknowledgements
+
+A heartfelt thank you to **Dr. Nizam** from Universiti Malaysia Pahang (UMP) for his invaluable guidance, mentorship, and patience throughout this research. His expertise in the domain and generous sharing of the UMP examination dataset made this project possible.
+
+> *"Whatever you do, do it wholeheartedly."*
 
 ---
 
