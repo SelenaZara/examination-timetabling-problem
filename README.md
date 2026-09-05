@@ -1,130 +1,113 @@
-# UMP Examination Timetabling Optimization
+# Academic Examination Timetabling Research System (Java Full-Stack)
 
-[![Java Version](https://img.shields.io/badge/Java-8%2B-blue.svg)](https://www.oracle.com/java/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+A full-stack, research-grade Java web application replicating the classic desktop GUI for academic examination timetabling optimization.
 
-An optimization framework written in Java to solve real-world, multi-campus **University Examination Timetabling Problems (UETP)** at Universiti Malaysia Pahang (UMP) using graph heuristics and local search metaheuristics.
-
----
-
-## Overview
-
-The UMP examination timetabling problem involves scheduling examination sessions across two separate campuses located **57 km apart** (Gambang and Pekan) while satisfying both hard operational constraints and soft quality requirements.
-
-This repository implements a **two-phase approach**:
-1. **Initial Phase:** Uses Graph Heuristics (e.g., Largest Degree, Saturation Degree) to construct initial feasible solutions.
-2. **Improvement Phase:** Applies Local Search algorithms (Hill Climbing, Late Acceptance Hill Climbing, Step-Counting Hill Climbing) to minimize soft constraint penalty costs.
+This platform models the **Universiti Malaysia Pahang (UMP)** examination datasets for **Session 2018/2019 (Semester 1 & Semester 2)** across **Gambang Campus**, **Pekan Campus**, and **Combined Faculties** over 30 discrete examination time slots (10 days $\times$ 3 sessions/day).
 
 ---
 
-## Key Features & Constraints
-
-### Hard Constraints (Must be satisfied)
-* **H1 (Clash-Free):** Students must not be scheduled to sit more than one exam at the same timeslot.
-* **H2 (Single Assignment):** Each exam must be scheduled exactly once across 30 available timeslots (3-week period, 2 slots/day, excluding weekends).
-* **H3 (Room Capacity):** Total assigned student seats must not exceed the capacity of assigned examination rooms.
-* **H4 (Room Availability):** Number of rooms used in a timeslot cannot exceed total available rooms (Gambang: 22, Pekan: 17).
-* **H5 (Campus Allocation):** Exams must be assigned to the appropriate campus location.
-* **H6 (Cross-Campus Synchronization):** Identical general course exams across different campuses must occur in the same timeslot.
-* **H7 (Large Exams Early):** Large exams (>400 students) must be scheduled within the first 10 timeslots.
-
-### Soft Constraints (Penalty Minimization)
-* **S1 (Exam Spreading):** Spread exams evenly for students across the period to prevent back-to-back testing.
-* **S2 (Building Proximity):** Ensure split exams occur in adjacent/nearby rooms in the same building.
-* **S3 (Minimization of Room Splitting):** Discourage splitting single exam sessions across multiple rooms.
-* **S4 (Uniform Duration):** Minimize mixing exams with different time durations in the same room.
-
----
-
-## Algorithm Performance & Results
-
-Benchmark evaluations on UMP **Semester 1** and **Semester 2 (2018/2019)** datasets produced the following penalty costs:
-
-| Algorithm / Heuristic | Sem 1 2018/2019 Cost | Sem 2 2018/2019 Cost |
-| :--- | :---: | :---: |
-| **Initial Phase (Best Graph Heuristic)** | 41.36 *(SD LWD)* | 12.38 *(LD)* |
-| **Hill Climbing (HC) - Move** | **38.30** | **9.23** |
-| **Hill Climbing (HC) - Swap** | 38.31 | 9.25 |
-| **Late Acceptance Hill Climbing (LAHC)** | 39.48 | 9.45 |
-| **Step-Counting Hill Climbing (SCHC)** | 39.41 | 10.64 |
-
-*Note: **HC Move** yielded the lowest penalty costs across both academic semester datasets.*
-
----
-
-## Getting Started
-
-### Prerequisites
-* **Java Development Kit (JDK):** Version 8 or higher
-* **Apache Maven** or **Gradle** (Optional build tool)
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/<your-username>/ump-examination-timetabling.git
-   cd ump-examination-timetabling
-   ```
-
-2. Compile the project:
-   ```bash
-   mvn compile
-   # or manually
-   javac -d bin src/**/*.java
-   ```
-
-3. Run the solver:
-   ```bash
-   mvn exec:java -Dexec.mainClass="edu.ump.timetabling.Main"
-   # or using the provided script
-   ./run.bat   # Windows
-   ./run.ps1   # PowerShell
-   ```
-
----
-
-## Project Structure
+## 1. System Architecture & Components
 
 ```
-ump-examination-timetabling/
+d:\Coding\Java\examination-timetabling-problem/
+├── pom.xml                                      # Maven configuration
+├── run.bat                                      # Quick build & launch script (Windows)
+├── run.ps1                                      # PowerShell launcher
+├── README.md                                    # System documentation
 ├── src/
-│   └── main/
-│       └── java/edu/ump/timetabling/
-│           ├── Main.java
-│           ├── model/          # Data models (Exam, Room, Timeslot, etc.)
-│           ├── dataset/        # Dataset loaders & conflict matrix
-│           └── solver/         # Heuristic & metaheuristic algorithms
-├── README.md
-└── pom.xml
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── edu/ump/timetabling/
+│   │   │       ├── Main.java                    # Entrypoint & HTTP Server (Port 8080)
+│   │   │       ├── controller/
+│   │   │       │   ├── ApiHandler.java          # REST routing & JSON endpoints
+│   │   │       │   └── StaticFileHandler.java   # Serves UI assets & i18n
+│   │   │       ├── model/
+│   │   │       │   ├── Exam.java                # Course/exam details & student enrollments
+│   │   │       │   ├── Room.java                # Room ID, name, capacity, campus
+│   │   │       │   ├── ProblemInstance.java     # Dataset container with conflict matrix & degree metrics
+│   │   │       │   ├── TimetableSolution.java   # X_it, Y_ir, Z_rt representations & assignment state
+│   │   │       │   └── EvaluationResult.java    # Hard violations & soft penalty metrics
+│   │   │       ├── dataset/
+│   │   │       │   ├── ConflictMatrixBuilder.java # Builds symmetric conflict matrix [Course.length][Course.length]
+│   │   │       │   └── UmpDataRepository.java   # UMP 2018/2019 Sem 1 & Sem 2 datasets
+│   │   │       ├── solver/
+│   │   │       │   ├── ConstraintEvaluator.java # Hard (0-conflict, room cap) & Soft Carter proximity
+│   │   │       │   ├── HeuristicAlgorithm.java  # Common solver interface
+│   │   │       │   ├── initial/                 # Initial Phase Graph Heuristics
+│   │   │       │   │   ├── LargestDegree.java           (LD)
+│   │   │       │   │   ├── LargestEnrollment.java       (LE)
+│   │   │       │   │   ├── LargestWeightedDegree.java   (LWD)
+│   │   │       │   │   └── SaturationDegree.java        (SD LD, SD LE, SD LWD)
+│   │   │       │   └── improvement/             # Improvement Phase Metaheuristics
+│   │   │       │       ├── HillClimbingMove.java        (HC Move)
+│   │   │       │       ├── HillClimbingSwap.java        (HC Swap)
+│   │   │       │       ├── LateAcceptanceHC.java        (LAHC)
+│   │   │       │       └── StepCountingHC.java          (SCHC)
+│   │   │       └── util/
+│   │   │           ├── JsonUtil.java            # Lightweight JSON serializer & parser
+│   │   │           └── I18nManager.java         # Multi-language bundle loader
+│   │   └── resources/
+│   │       ├── i18n/
+│   │       │   ├── messages_en.properties       # English dictionary
+│   │       │   ├── messages_ms.properties       # Bahasa Melayu dictionary
+│   │       │   └── messages_zh.properties       # Chinese dictionary
+│   │       └── web/
+│   │           ├── index.html                   # Vertical scrollable web UI with section dividers
+│   │           ├── css/style.css                # Classic desktop GUI styling (bordered fieldsets, bevels)
+│   │           └── js/
+│   │               ├── app.js                   # UI controllers, event handlers, AJAX communication
+│   │               ├── i18n.js                  # Dynamic live language switching
+│   │               └── timetable-grid.js        # DataGrid renderer for X_it, Y_ir, Z_rt & results
 ```
 
 ---
 
-## Algorithms Implemented
+## 2. Web Layout Structure (Vertical Scrollable Flow)
 
-### Graph Heuristics (Initial Phase)
-| Heuristic | Description |
-| :--- | :--- |
-| **LD** (Largest Degree) | Prioritize exams with the most conflicts |
-| **SD** (Saturation Degree) | Prioritize exams with the fewest remaining color options |
-| **LWD** (Largest Weighted Degree) | Weighted version using student counts |
-| **SD LWD** | Saturation Degree with Largest Weighted Degree tie-breaking |
+1. **Header Bar**:
+   - System title and subtitle.
+   - Dataset selector (UMP 2018/2019 Sem 1/2 Gambang, Pekan, Combined).
+   - Language selector (English, Bahasa Melayu, Chinese).
 
-### Local Search (Improvement Phase)
-| Algorithm | Description |
-| :--- | :--- |
-| **HC Move** | Hill Climbing using single-exam move operations |
-| **HC Swap** | Hill Climbing using exam-swap operations |
-| **LAHC** | Late Acceptance Hill Climbing with history list |
-| **SCHC** | Step-Counting Hill Climbing with step counter |
+2. **Section 1: Conflict Matrix Generator & Dataset Management**:
+   - `[Generate Conflict Matrix]`: Computes symmetric matrix `conflictMatrix = new int[Course.length][Course.length]`.
+   - `[Export Conflict Matrix (.CSV)]`: Exports the matrix to standard `.csv`.
+   - `[Upload Dataset (Excel / CSV)]`: Allows researchers to upload their own datasets.
+   - Interactive 2D Conflict Matrix preview grid with clash statistics.
+
+3. **Section 2: Timetable Optimization Workbench**:
+   - Left Control Panel: `Initialize` & `Setting` (Max Iterations, LAHC List Length $L_{fa}$, SCHC Step Length $L_s$).
+   - Initial Phase: `LD`, `LE`, `LWD`, `SD LD`, `SD LE`, `SD LWD` + `[Generate]`.
+   - Improvement Phase: `HC Move`, `HC Swap`, `LAHC`, `SCHC` + `[Generate]`.
+   - Right Canvas: Real-time comparison terminal log, feasibility status, soft penalties, and time.
+
+4. **Section 3: Timetable Action Bar & Decision Matrices**:
+   - `[Xit Timetable]`: Binary exam-to-period assignment matrix viewer with CSV export.
+   - `[Yir Timetable]`: Binary exam-to-room assignment matrix viewer with CSV export.
+   - `[Zrt Timetable]`: Binary room-to-period utilization matrix viewer with CSV export.
+   - `[Calculate]`: Evaluates the full mathematical objective function and constraint violations.
+
+5. **Section 4: Examination Schedule DataGrid**:
+   - Full-width scrollable data grid showing courses, names, enrollments, periods ($t \in 1..30$), rooms ($r$), day/session breakdown, and conflict status.
 
 ---
 
-## License
+## 3. How to Build & Run
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+### Method 1: Using Windows Batch Script (Zero-Dependency)
+```cmd
+run.bat
+```
 
----
+### Method 2: Using PowerShell
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run.ps1
+```
 
-## Author
+### Method 3: Using Maven
+```bash
+mvn compile exec:java -Dexec.mainClass="edu.ump.timetabling.Main"
+```
 
-Developed as part of research on examination timetabling optimization at **Universiti Malaysia Pahang (UMP)**.
+Open your browser at **`http://localhost:8080`**.
