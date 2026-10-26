@@ -24,6 +24,20 @@
             </div>
         </div>
         <div class="nav-actions">
+            <!-- What This Website Can Do Button -->
+            <button id="btn-nav-capabilities" class="btn-nav-capabilities" title="Explore What This Platform Can Do">
+                <span class="cap-sparkle">&#10024;</span>
+                <span data-i18n="nav.capabilities">What This Website Can Do</span>
+            </button>
+
+            <!-- Visitor Counter Pill -->
+            <div class="visitor-counter-pill" id="nav-visitor-pill" title="Total Website Visits (Persistent Real-Time Counter)">
+                <span class="visitor-live-dot" title="Server is Active"></span>
+                <span class="visitor-icon">&#128065;</span>
+                <span class="visitor-label" data-i18n="nav.visitors">Visitors</span>
+                <span class="visitor-count-number" id="visitor-count-val">...</span>
+            </div>
+
             <!-- Buy Me a Coffee Button -->
             <a href="https://buymeacoffee.com/selenazara" target="_blank" rel="noopener noreferrer" class="btn-bmc">
                 <span class="bmc-cup">&#9749;</span>
@@ -49,6 +63,202 @@
             <strong>Generalized Examination Timetabling Platform:</strong> Designed for university scheduling with multi-campus venue allocation, travel distance constraints (Drp), course coincidence synchronization, and student clash minimization (closely matching the UMP benchmark dataset environment).
         </div>
     </div>
+
+    <!-- SECTION: What This Website Can Do & System Capabilities -->
+    <section class="web-card capabilities-card" id="capabilities-card">
+        <div class="card-header capabilities-header">
+            <div class="header-left">
+                <div class="cap-header-badge-row">
+                    <span class="cap-badge" data-i18n="capabilities.badge">Platform Capabilities</span>
+                    <span class="cap-status-pill"><span class="pulse-dot"></span> Optimization Research Engine</span>
+                </div>
+                <h2 class="card-title">
+                    <span class="title-sparkle">&#10024;</span> <span data-i18n="capabilities.title">What This Website Can Do</span>
+                </h2>
+                <p class="card-subtitle" data-i18n="capabilities.subtitle">
+                    Comprehensive Multi-Campus Examination Scheduling & Optimization Research Engine
+                </p>
+            </div>
+            <div class="header-actions">
+                <button id="btn-quick-demo" class="btn btn-warning btn-sm font-bold btn-demo-pulse" title="One-click automatic demo: Runs LD Initial Phase followed by HC Move Optimization">
+                    <span>&#9889;</span> <span data-i18n="capabilities.quick_demo">⚡ Quick Demo</span>
+                </button>
+                <button id="btn-open-capabilities-modal" class="btn btn-secondary btn-sm font-semibold">
+                    <span>&#128214;</span> <span data-i18n="capabilities.guide_btn">📖 System Guide</span>
+                </button>
+                <button id="btn-toggle-capabilities" class="btn btn-secondary btn-sm">
+                    <span id="capabilities-toggle-arrow">&#9650; Hide Panel</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body" id="capabilities-body">
+            <!-- Interactive 5-Step Pipeline Roadmap -->
+            <div class="cap-pipeline-wrap">
+                <div class="pipeline-title">
+                    <span>&#128506;&#65039;</span> <strong>Automated 5-Stage Timetabling Workflow</strong> <small>(Click any stage to jump directly)</small>:
+                </div>
+                <div class="pipeline-steps">
+                    <button type="button" class="pipeline-step-item" id="step-goto-upload" title="Jump to Dataset Upload & Checklist">
+                        <span class="step-num">1</span>
+                        <div class="step-meta">
+                            <span class="step-title">Data Ingestion</span>
+                            <span class="step-desc">7 files or 6 UMP benchmarks</span>
+                        </div>
+                    </button>
+                    <div class="pipeline-connector">&#10140;</div>
+                    <button type="button" class="pipeline-step-item" id="step-goto-conflict" title="Jump to Conflict Matrix Inspector">
+                        <span class="step-num">2</span>
+                        <div class="step-meta">
+                            <span class="step-title">Conflict Graph</span>
+                            <span class="step-desc">Symmetric clashes & density</span>
+                        </div>
+                    </button>
+                    <div class="pipeline-connector">&#10140;</div>
+                    <button type="button" class="pipeline-step-item" id="step-goto-settings" title="Jump to Constraints & Parameters">
+                        <span class="step-num">3</span>
+                        <div class="step-meta">
+                            <span class="step-title">Rule Configuration</span>
+                            <span class="step-desc">H1-H7 hard & S1-S4 soft</span>
+                        </div>
+                    </button>
+                    <div class="pipeline-connector">&#10140;</div>
+                    <button type="button" class="pipeline-step-item" id="step-goto-workbench" title="Jump to Optimization Workbench">
+                        <span class="step-num">4</span>
+                        <div class="step-meta">
+                            <span class="step-title">Two-Phase Solvers</span>
+                            <span class="step-desc">LD/LE/SD + HC/LAHC/SCHC</span>
+                        </div>
+                    </button>
+                    <div class="pipeline-connector">&#10140;</div>
+                    <button type="button" class="pipeline-step-item" id="step-goto-results" title="Jump to Schedules & Matrix Views">
+                        <span class="step-num">5</span>
+                        <div class="step-meta">
+                            <span class="step-title">Decision Output</span>
+                            <span class="step-desc">Xit, Yir, Zrt & Schedule Grid</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 6 Feature Highlight Cards Grid -->
+            <div class="cap-grid">
+                <!-- Card 1 -->
+                <div class="cap-card">
+                    <div class="cap-card-header">
+                        <div class="cap-icon-box indigo">&#128194;</div>
+                        <div class="cap-card-title-group">
+                            <h4>7-File Dataset Ingestion</h4>
+                            <span class="cap-card-badge">Data Layer</span>
+                        </div>
+                    </div>
+                    <p class="cap-card-text">
+                        Parses and validates 7 distinct tabular institution files (campus scope, coincidence, rooms, student registrations, durations) or instantly loads 6 built-in UMP 2018/2019 multi-campus benchmark datasets.
+                    </p>
+                    <div class="cap-tags">
+                        <span class="cap-tag">CSV / TXT Parser</span>
+                        <span class="cap-tag">6 Benchmarks</span>
+                        <span class="cap-tag">Schema Checklist</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="cap-card">
+                    <div class="cap-card-header">
+                        <div class="cap-icon-box emerald">&#9889;</div>
+                        <div class="cap-card-title-group">
+                            <h4>Conflict Matrix Analytics</h4>
+                            <span class="cap-card-badge">Graph Theory</span>
+                        </div>
+                    </div>
+                    <p class="cap-card-text">
+                        Builds symmetric student clash matrices <code>C[i][j] = |S_i ∩ S_j|</code>. Real-time computation of conflict graph edges, clash density, max clash bottlenecks, and 1-click CSV matrix export.
+                    </p>
+                    <div class="cap-tags">
+                        <span class="cap-tag">Clash Heatmap</span>
+                        <span class="cap-tag">Graph Density</span>
+                        <span class="cap-tag">CSV Export</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="cap-card">
+                    <div class="cap-card-header">
+                        <div class="cap-icon-box amber">&#9881;</div>
+                        <div class="cap-card-title-group">
+                            <h4>11-Constraint Verification</h4>
+                            <span class="cap-card-badge">Mathematical Model</span>
+                        </div>
+                    </div>
+                    <p class="cap-card-text">
+                        Enforces 7 hard constraints (H1-H7: zero student clashes, room capacities, single assignment, campus mismatch, split sync) while calculating 4 soft constraints (S1-S4: Carter proximity, building travel, room splits).
+                    </p>
+                    <div class="cap-tags">
+                        <span class="cap-tag">H1–H7 Hard</span>
+                        <span class="cap-tag">S1–S4 Soft</span>
+                        <span class="cap-tag">Carter Proximity</span>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="cap-card">
+                    <div class="cap-card-header">
+                        <div class="cap-icon-box purple">&#129513;</div>
+                        <div class="cap-card-title-group">
+                            <h4>Constructive Graph Heuristics</h4>
+                            <span class="cap-card-badge">Initial Phase</span>
+                        </div>
+                    </div>
+                    <p class="cap-card-text">
+                        Constructs valid, 100% clash-free starting timetables in milliseconds using 6 graph coloring heuristics: Largest Degree (LD), Largest Enrollment (LE), Largest Weighted Degree (LWD), and Saturation Degree (SD LD, SD LE, SD LWD).
+                    </p>
+                    <div class="cap-tags">
+                        <span class="cap-tag">Largest Degree</span>
+                        <span class="cap-tag">Saturation Degree</span>
+                        <span class="cap-tag">&lt; 100ms Execution</span>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="cap-card">
+                    <div class="cap-card-header">
+                        <div class="cap-icon-box rose">&#128640;</div>
+                        <div class="cap-card-title-group">
+                            <h4>Metaheuristic Local Search</h4>
+                            <span class="cap-card-badge">Improvement Phase</span>
+                        </div>
+                    </div>
+                    <p class="cap-card-text">
+                        Iteratively optimizes initial solutions to minimize student exam spread penalty. Features Hill Climbing (Single Move & Pairwise Swap), Late Acceptance Hill Climbing (LAHC), and Step Counting Hill Climbing (SCHC).
+                    </p>
+                    <div class="cap-tags">
+                        <span class="cap-tag">HC Move & Swap</span>
+                        <span class="cap-tag">LAHC (L_fa)</span>
+                        <span class="cap-tag">SCHC (L_s)</span>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="cap-card">
+                    <div class="cap-card-header">
+                        <div class="cap-icon-box cyan">&#128202;</div>
+                        <div class="cap-card-title-group">
+                            <h4>Decision Matrices & DataGrid</h4>
+                            <span class="cap-card-badge">Visual Output</span>
+                        </div>
+                    </div>
+                    <p class="cap-card-text">
+                        Inspect exact binary decision matrices: <code>X_it</code> (Exam × Period), <code>Y_ir</code> (Exam × Room), and <code>Z_rt</code> (Room × Period), coupled with an interactive, searchable Examination Schedule DataGrid.
+                    </p>
+                    <div class="cap-tags">
+                        <span class="cap-tag">Xit, Yir, Zrt Views</span>
+                        <span class="cap-tag">Real-time Search</span>
+                        <span class="cap-tag">Venue Splitting</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- INLINE SECTION: 7-File Dataset Upload & Configuration Card (In-Page, No Popup Modal) -->
     <section class="web-card upload-card" id="upload-inline-card">
@@ -510,6 +720,19 @@
         <div class="footer-left">
             <span>Academic Examination Timetabling Platform</span> &bull; <span>Standard Constraints: Zero-Clash Hard Formulation & Carter Proximity Soft Formulation</span>
         </div>
+        <div class="footer-stats-bar">
+            <span class="footer-stat-pill" title="Total Website Visits">
+                <span class="visitor-icon">&#128065;</span>
+                <span data-i18n="footer.visitors">Total Platform Visits:</span>
+                <strong id="footer-visitor-count">--</strong>
+            </span>
+            <span class="footer-stat-pill" title="Server Health & Uptime">
+                <span class="status-live-dot"></span>
+                <span data-i18n="footer.status">Server Status:</span>
+                <strong class="text-success">Online</strong>
+                (<span id="footer-uptime">0s</span>)
+            </span>
+        </div>
         <div class="footer-right">
             <a href="https://buymeacoffee.com/selenazara" target="_blank" rel="noopener noreferrer" class="footer-bmc-link">
                 ☕ Support on Buy Me a Coffee
@@ -519,6 +742,152 @@
 
 </div>
 
+
+<!-- Capabilities & System Architecture Modal Dialog -->
+<div id="capabilities-modal" class="modal-overlay">
+    <div class="modal-dialog" style="width: 960px; max-width: 95vw;">
+        <div class="modal-header">
+            <div>
+                <h3 class="modal-title">&#10024; What This Website Can Do — Architecture & Guide</h3>
+                <p class="modal-subtitle">University Examination Timetabling Optimization Research Engine</p>
+            </div>
+            <button id="btn-close-capabilities-modal" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto; padding-right: 12px;">
+            <div class="modal-guide-section">
+                <h4 class="guide-sec-title"><span>&#127919;</span> System Overview & Capabilities</h4>
+                <p class="guide-p">
+                    This platform solves the <strong>Examination Timetabling Problem (ETP)</strong> — a challenging NP-hard combinatorial optimization challenge in higher education. The system models multi-campus venues (e.g. UMP Gambang and Pekan campuses) across <strong>30 discrete timeslots</strong> (10 examination days with Morning, Afternoon, and Evening slots), allocating exams to venues while guaranteeing zero student clashes and satisfying strict university constraints.
+                </p>
+            </div>
+
+            <div class="modal-guide-section">
+                <h4 class="guide-sec-title"><span>&#128221;</span> 7 Hard Constraints (Feasibility Criteria)</h4>
+                <table class="modal-guide-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">ID</th>
+                            <th style="width: 170px;">Constraint</th>
+                            <th>Mathematical Formulation & Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge-code hard">H1</span></td>
+                            <td><strong>Clash-Free Schedule</strong></td>
+                            <td>No student may be scheduled for two exams concurrently in the same timeslot: <code>&sum; x_it &le; 1</code> for conflicting exams.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code hard">H2</span></td>
+                            <td><strong>Single Assignment</strong></td>
+                            <td>Every registered course exam must be scheduled exactly once: <code>&sum;_t x_it = 1</code> for all exams <code>i</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code hard">H3</span></td>
+                            <td><strong>Room Capacity</strong></td>
+                            <td>Total student seating allocated cannot exceed the room's physical capacity: <code>&sum; s_i &times; y_ir &le; C_r</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code hard">H4</span></td>
+                            <td><strong>Room Availability</strong></td>
+                            <td>A venue can host at most one exam event per timeslot without double-booking.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code hard">H5</span></td>
+                            <td><strong>Campus Scope</strong></td>
+                            <td>Courses offered in Gambang must be assigned to Gambang rooms; Pekan courses to Pekan rooms.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code hard">H6</span></td>
+                            <td><strong>Split Coincidence Sync</strong></td>
+                            <td>Common faculty subjects (e.g., G0002 & P0002) must sit concurrently in the exact same timeslot: <code>period(i) == period(j)</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code hard">H7</span></td>
+                            <td><strong>Large Exams Early</strong></td>
+                            <td>Massive courses (>400 students) must be placed within early timeslots 1–10 to avoid grading and logistical delays.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-guide-section">
+                <h4 class="guide-sec-title"><span>&#9878;&#65039;</span> 4 Soft Constraints (Quality Objectives)</h4>
+                <table class="modal-guide-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">ID</th>
+                            <th style="width: 170px;">Soft Objective</th>
+                            <th>Penalty Calculation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge-code soft">S1</span></td>
+                            <td><strong>Carter Spreading</strong></td>
+                            <td>Minimizes student back-to-back exam fatigue. Proximity weight <code>w(&Delta;) = 2^(5 - &Delta;)</code> for exams with period gap <code>1 &le; &Delta; &le; 5</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code soft">S2</span></td>
+                            <td><strong>Building Distance</strong></td>
+                            <td>When an exam splits across multiple venues, penalizes inter-building distances using the distance matrix <code>D_rp</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code soft">S3</span></td>
+                            <td><strong>Split Minimization</strong></td>
+                            <td>Penalizes splitting a course across multiple rooms unless physical capacity dictates it.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge-code soft">S4</span></td>
+                            <td><strong>Uniform Duration</strong></td>
+                            <td>Avoids placing exams with different time limits (e.g., 90 min vs 180 min) into the same hall.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-guide-section">
+                <h4 class="guide-sec-title"><span>&#9889;</span> Two-Phase Solver Engine</h4>
+                <div class="guide-two-col">
+                    <div class="guide-col-box">
+                        <h5>Initial Phase (Constructive Graph Heuristics)</h5>
+                        <ul class="guide-list">
+                            <li><strong>Largest Degree (LD)</strong>: Prioritizes exams with highest conflict edge count.</li>
+                            <li><strong>Largest Enrollment (LE)</strong>: Prioritizes exams with largest student registration.</li>
+                            <li><strong>Largest Weighted Degree (LWD)</strong>: Prioritizes exams by total student clash weights.</li>
+                            <li><strong>Saturation Degree (SD LD / SD LE / SD LWD)</strong>: Dynamically orders exams by remaining available timeslots.</li>
+                        </ul>
+                    </div>
+                    <div class="guide-col-box">
+                        <h5>Improvement Phase (Metaheuristics)</h5>
+                        <ul class="guide-list">
+                            <li><strong>Hill Climbing Move (HC Move)</strong>: Single exam re-assignment neighborhood search.</li>
+                            <li><strong>Hill Climbing Swap (HC Swap)</strong>: Pairwise period exchange neighborhood search.</li>
+                            <li><strong>Late Acceptance HC (LAHC)</strong>: Accepts moves comparing against a cost list <code>L_fa</code> steps prior.</li>
+                            <li><strong>Step Counting HC (SCHC)</strong>: Updates the reference acceptance cost every <code>L_s</code> iterations.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-guide-section">
+                <h4 class="guide-sec-title"><span>&#128640;</span> Quickstart Guide</h4>
+                <ol class="guide-steps-list">
+                    <li><strong>Choose a Dataset:</strong> Use the built-in benchmark datasets or upload your 7-file institutional package.</li>
+                    <li><strong>Generate Conflict Matrix:</strong> Verify student clash counts, density, and export CSV if needed.</li>
+                    <li><strong>Set Constraints:</strong> Adjust hard/soft flags and parameters (max iterations, list length).</li>
+                    <li><strong>Run Initial Phase:</strong> Pick an initial algorithm (e.g., LD) to generate a feasible seed timetable.</li>
+                    <li><strong>Run Optimization:</strong> Pick a metaheuristic (e.g., LAHC or HC Move) to drive down soft penalty.</li>
+                    <li><strong>Inspect Matrices & Grid:</strong> Open Xit, Yir, or Zrt views, and filter the final schedule DataGrid.</li>
+                </ol>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="btn-modal-demo" class="btn btn-warning font-bold">⚡ Run Quick Demo</button>
+            <button onclick="document.getElementById('capabilities-modal').style.display='none'" class="btn btn-primary">Close Guide</button>
+        </div>
+    </div>
+</div>
 
 <!-- Matrix Viewer Modal Dialog (for Xit, Yir, Zrt representations) -->
 <div id="matrix-modal" class="modal-overlay">

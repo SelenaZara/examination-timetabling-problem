@@ -60,6 +60,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     const metricSoft              = document.getElementById('metric-soft');
     const metricTime              = document.getElementById('metric-time');
 
+    // Visitor Counter & Capabilities Showcase Elements
+    const visitorCountVal           = document.getElementById('visitor-count-val');
+    const footerVisitorCount        = document.getElementById('footer-visitor-count');
+    const footerUptime              = document.getElementById('footer-uptime');
+    const btnNavCapabilities        = document.getElementById('btn-nav-capabilities');
+    const capabilitiesCard          = document.getElementById('capabilities-card');
+    const capabilitiesBody          = document.getElementById('capabilities-body');
+    const btnToggleCapabilities     = document.getElementById('btn-toggle-capabilities');
+    const capabilitiesToggleArrow   = document.getElementById('capabilities-toggle-arrow');
+    const btnQuickDemo              = document.getElementById('btn-quick-demo');
+    const btnOpenCapabilitiesModal  = document.getElementById('btn-open-capabilities-modal');
+    const btnCloseCapabilitiesModal = document.getElementById('btn-close-capabilities-modal');
+    const capabilitiesModal         = document.getElementById('capabilities-modal');
+    const btnModalDemo              = document.getElementById('btn-modal-demo');
+
+    // Pipeline Navigation Steps
+    const stepGotoUpload            = document.getElementById('step-goto-upload');
+    const stepGotoConflict          = document.getElementById('step-goto-conflict');
+    const stepGotoSettings          = document.getElementById('step-goto-settings');
+    const stepGotoWorkbench         = document.getElementById('step-goto-workbench');
+    const stepGotoResults           = document.getElementById('step-goto-results');
+
     // ── 7-File In-Memory Storage ──────────────────────────────────────────────
     const fileTypes = ['campus', 'coincidence', 'course', 'distance', 'roominfo', 'student', 'timeslot'];
     const uploadedFiles = { campus: '', coincidence: '', course: '', distance: '', roominfo: '', student: '', timeslot: '' };
@@ -91,6 +113,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ── Init: load conflict matrix & grid ─────────────────────────────────────
     await loadConflictMatrix();
     await loadCurrentGrid();
+
+    // ── Init: Visitor Counter ─────────────────────────────────────────────────
+    await fetchVisitorStats(true);
+    setInterval(() => fetchVisitorStats(false), 30000);
 
 
     // ── Language ──────────────────────────────────────────────────────────────
@@ -649,8 +675,106 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function setBusy(isBusy) {
-        const btns = [btnInitialize, btnInitialGenerate, btnImproveGenerate, btnCalculate, btnGenerateConflict];
+        const btns = [btnInitialize, btnInitialGenerate, btnImproveGenerate, btnCalculate, btnGenerateConflict, btnQuickDemo, btnModalDemo];
         btns.forEach(b => { if (b) b.disabled = isBusy; });
         document.body.style.cursor = isBusy ? 'wait' : 'default';
     }
+
+    // ── Visitor Statistics Fetcher ────────────────────────────────────────────
+    async function fetchVisitorStats(recordVisit = false) {
+        try {
+            const url = recordVisit ? '/api/stats?visit=true' : '/api/stats';
+            const resp = await fetch(url);
+            if (!resp.ok) return;
+            const data = await resp.json();
+            const formatted = data.visitorCountFormatted || (data.visitorCount != null ? Number(data.visitorCount).toLocaleString() : '--');
+            if (visitorCountVal) visitorCountVal.textContent = formatted;
+            if (footerVisitorCount) footerVisitorCount.textContent = formatted;
+            if (footerUptime && data.uptime) footerUptime.textContent = data.uptime;
+        } catch (e) {
+            console.warn('Could not fetch visitor statistics:', e.message);
+        }
+    }
+
+    // ── Smooth Scroll Helper ──────────────────────────────────────────────────
+    function smoothScrollTo(target) {
+        const el = typeof target === 'string' ? (document.getElementById(target) || document.querySelector(target)) : target;
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            el.classList.add('flash-highlight');
+            setTimeout(() => el.classList.remove('flash-highlight'), 1600);
+        }
+    }
+
+    // ── Capabilities Showcase & Modal Handlers ────────────────────────────────
+    if (btnNavCapabilities) {
+        btnNavCapabilities.addEventListener('click', () => {
+            smoothScrollTo('capabilities-card');
+        });
+    }
+
+    if (btnToggleCapabilities && capabilitiesBody && capabilitiesToggleArrow) {
+        btnToggleCapabilities.addEventListener('click', () => {
+            const isHidden = capabilitiesBody.style.display === 'none';
+            capabilitiesBody.style.display = isHidden ? 'block' : 'none';
+            capabilitiesToggleArrow.innerHTML = isHidden ? '&#9650; Hide Panel' : '&#9660; Show Capabilities';
+        });
+    }
+
+    if (btnOpenCapabilitiesModal && capabilitiesModal) {
+        btnOpenCapabilitiesModal.addEventListener('click', () => {
+            capabilitiesModal.style.display = 'flex';
+        });
+    }
+
+    if (btnCloseCapabilitiesModal && capabilitiesModal) {
+        btnCloseCapabilitiesModal.addEventListener('click', () => {
+            capabilitiesModal.style.display = 'none';
+        });
+    }
+
+    // Close capabilities modal when clicking outside dialog
+    if (capabilitiesModal) {
+        capabilitiesModal.addEventListener('click', (e) => {
+            if (e.target === capabilitiesModal) {
+                capabilitiesModal.style.display = 'none';
+            }
+        });
+    }
+
+    // ── One-Click Quick Demo Workflow ─────────────────────────────────────────
+    async function runQuickDemo() {
+        if (capabilitiesModal) capabilitiesModal.style.display = 'none';
+        smoothScrollTo('.workbench-grid');
+
+        appendLog('\n====================================================================', 'system');
+        appendLog('🚀 [QUICK DEMO] Launching automatic timetabling workflow demo...', 'system');
+        appendLog('  Stage 1: Generating feasible seed timetable via Largest Degree (LD)...', 'system');
+
+        const ldRadio = document.querySelector('input[name="initial_algo"][value="LD"]');
+        if (ldRadio) ldRadio.checked = true;
+
+        if (btnInitialGenerate) {
+            btnInitialGenerate.click();
+        }
+
+        setTimeout(() => {
+            appendLog('  Stage 2: Improving solution with Hill Climbing Move (HC Move)...', 'system');
+            const hcRadio = document.querySelector('input[name="improve_algo"][value="HC Move"]');
+            if (hcRadio) hcRadio.checked = true;
+            if (btnImproveGenerate) {
+                btnImproveGenerate.click();
+            }
+        }, 1400);
+    }
+
+    if (btnQuickDemo) btnQuickDemo.addEventListener('click', runQuickDemo);
+    if (btnModalDemo) btnModalDemo.addEventListener('click', runQuickDemo);
+
+    // ── Pipeline Stepper Click Navigation ─────────────────────────────────────
+    if (stepGotoUpload)    stepGotoUpload.addEventListener('click', () => smoothScrollTo('upload-inline-card'));
+    if (stepGotoConflict)  stepGotoConflict.addEventListener('click', () => smoothScrollTo('conflict-matrix-preview'));
+    if (stepGotoSettings)  stepGotoSettings.addEventListener('click', () => smoothScrollTo('settings-inline-card'));
+    if (stepGotoWorkbench) stepGotoWorkbench.addEventListener('click', () => smoothScrollTo('.workbench-grid'));
+    if (stepGotoResults)   stepGotoResults.addEventListener('click', () => smoothScrollTo('timetable-datagrid'));
 });

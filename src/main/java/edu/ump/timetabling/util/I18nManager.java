@@ -19,22 +19,40 @@ public class I18nManager {
 
     private void loadLanguage(String lang) {
         Map<String, String> map = new HashMap<>();
-        String resourcePath = "/i18n/messages_" + lang + ".properties";
+        File file = new File("src/main/resources/i18n/messages_" + lang + ".properties");
+        if (!file.exists()) {
+            file = new File("resources/i18n/messages_" + lang + ".properties");
+        }
 
-        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
-            if (is != null) {
+        if (file.exists()) {
+            try (InputStream is = new FileInputStream(file)) {
                 Properties props = new Properties();
                 props.load(new InputStreamReader(is, StandardCharsets.UTF_8));
                 for (String key : props.stringPropertyNames()) {
                     map.put(key, props.getProperty(key));
                 }
-            } else {
+            } catch (Exception e) {
                 populateFallback(lang, map);
             }
-        } catch (Exception e) {
-            populateFallback(lang, map);
+        } else {
+            String resourcePath = "/i18n/messages_" + lang + ".properties";
+            try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+                if (is != null) {
+                    Properties props = new Properties();
+                    props.load(new InputStreamReader(is, StandardCharsets.UTF_8));
+                    for (String key : props.stringPropertyNames()) {
+                        map.put(key, props.getProperty(key));
+                    }
+                } else {
+                    populateFallback(lang, map);
+                }
+            } catch (Exception e) {
+                populateFallback(lang, map);
+            }
         }
 
+        // Ensure new capability and visitor keys exist
+        populateFallbackDefaults(lang, map);
         bundles.put(lang, map);
     }
 
@@ -120,6 +138,43 @@ public class I18nManager {
             map.put("table.campus", "Campus");
             map.put("table.conflicts", "Conflicts");
             map.put("table.penalty", "Soft Penalty");
+        }
+    }
+
+    private void populateFallbackDefaults(String lang, Map<String, String> map) {
+        if ("ms".equals(lang)) {
+            map.putIfAbsent("capabilities.badge", "Keupayaan Sistem");
+            map.putIfAbsent("capabilities.title", "Apa Yang Laman Web Ini Boleh Lakukan");
+            map.putIfAbsent("capabilities.subtitle", "Enjin Penyelidikan & Pengoptimuman Jadual Waktu Peperiksaan Multi-Kampus");
+            map.putIfAbsent("capabilities.quick_demo", "⚡ Demo Pantas");
+            map.putIfAbsent("capabilities.guide_btn", "📖 Panduan Sistem");
+            map.putIfAbsent("nav.capabilities", "Keupayaan Laman Web");
+            map.putIfAbsent("nav.visitors", "Pelawat");
+            map.putIfAbsent("footer.visitors", "Jumlah Lawatan Platform:");
+            map.putIfAbsent("footer.uptime", "Masa Beroperasi:");
+            map.putIfAbsent("footer.status", "Dalam Talian");
+        } else if ("zh".equals(lang)) {
+            map.putIfAbsent("capabilities.badge", "系统功能与特性");
+            map.putIfAbsent("capabilities.title", "本平台的功能与特性");
+            map.putIfAbsent("capabilities.subtitle", "全方位多校区大学考试时间表排程与元启发式算法优化引擎");
+            map.putIfAbsent("capabilities.quick_demo", "⚡ 快速演示");
+            map.putIfAbsent("capabilities.guide_btn", "📖 架构与用户指南");
+            map.putIfAbsent("nav.capabilities", "功能特性");
+            map.putIfAbsent("nav.visitors", "访客");
+            map.putIfAbsent("footer.visitors", "平台总访问量:");
+            map.putIfAbsent("footer.uptime", "运行时间:");
+            map.putIfAbsent("footer.status", "在线");
+        } else {
+            map.putIfAbsent("capabilities.badge", "System Capabilities");
+            map.putIfAbsent("capabilities.title", "What This Website Can Do");
+            map.putIfAbsent("capabilities.subtitle", "Comprehensive Multi-Campus Examination Scheduling & Optimization Research Engine");
+            map.putIfAbsent("capabilities.quick_demo", "⚡ Quick Demo");
+            map.putIfAbsent("capabilities.guide_btn", "📖 System Guide");
+            map.putIfAbsent("nav.capabilities", "What This Website Can Do");
+            map.putIfAbsent("nav.visitors", "Visitors");
+            map.putIfAbsent("footer.visitors", "Total Platform Visits:");
+            map.putIfAbsent("footer.uptime", "Uptime:");
+            map.putIfAbsent("footer.status", "Online");
         }
     }
 

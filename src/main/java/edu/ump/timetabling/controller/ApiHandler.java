@@ -15,7 +15,11 @@ import edu.ump.timetabling.util.JsonUtil;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * REST API Handler for Examination Timetabling operations and Conflict Matrix generation.
@@ -24,6 +28,34 @@ public class ApiHandler implements HttpHandler {
 
     private final UmpDataRepository dataRepository;
     private final I18nManager i18nManager;
+
+    // Visitor counter — persistent tracking of unique page visits
+    private static final String VISITOR_FILE = "visitor_count.txt";
+    private static final AtomicLong VISITOR_COUNT = new AtomicLong(0);
+    private static final long SERVER_START_MS = System.currentTimeMillis();
+
+    static {
+        long initialCount = 1;
+        try {
+            File vf = new File(VISITOR_FILE);
+            if (vf.exists()) {
+                String content = new String(Files.readAllBytes(vf.toPath()), StandardCharsets.UTF_8).trim();
+                initialCount = Math.max(1, Long.parseLong(content));
+            } else {
+                initialCount = 1;
+                Files.write(vf.toPath(), String.valueOf(initialCount).getBytes(StandardCharsets.UTF_8));
+            }
+        } catch (Exception ignored) {
+            initialCount = 1;
+        }
+        VISITOR_COUNT.set(initialCount);
+    }
+
+    private static synchronized void persistVisitorCount() {
+        try {
+            Files.write(Paths.get(VISITOR_FILE), String.valueOf(VISITOR_COUNT.get()).getBytes(StandardCharsets.UTF_8));
+        } catch (Exception ignored) {}
+    }
 
     private ProblemInstance currentInstance;
     private TimetableSolution initialSolution;
@@ -105,6 +137,8 @@ public class ApiHandler implements HttpHandler {
                 handleTimetableGrid(exchange);
             } else if (path.equals("/api/i18n") && method.equals("GET")) {
                 handleI18n(exchange);
+            } else if (path.startsWith("/api/stats")) {
+                handleStats(exchange);
             } else {
                 sendJsonResponse(exchange, 404, Map.of("error", "Endpoint not found: " + path));
             }
@@ -853,6 +887,52 @@ public class ApiHandler implements HttpHandler {
         }
         Map<String, String> bundle = i18nManager.getBundle(lang);
         sendJsonResponse(exchange, 200, bundle);
+    }
+
+    private void handleStats(HttpExchange exchange) throws IOException {
+        String query = exchange.getRequestURI().getQuery();
+        String method = exchange.getRequestMethod();
+        String path = exchange.getRequestURI().getPath();
+
+        boolean isVisit = "POST".equalsIgnoreCase(method) || path.endsWith("/visit");
+        if (query != null && (query.contains("visit=true") || query.contains("visit=1") || query.contains("inc=1"))) {
+            isVisit = true;
+        }
+
+        long count;
+        if (isVisit) {
+            count = VISITOR_COUNT.incrementAndGet();
+            persistVisitorCount();
+        } else {
+            count = VISITOR_COUNT.get();
+        }
+
+        long uptimeMs = System.currentTimeMillis() - SERVER_START_MS;
+        long totalSecs = uptimeMs / 1000;
+        long days = totalSecs / 86400;
+        long hours = (totalSecs % 86400) / 3600;
+        long minutes = (totalSecs % 3600) / 60;
+        long seconds = totalSecs % 60;
+
+        StringBuilder uptimeStr = new StringBuilder();
+        if (days > 0) uptimeStr.append(days).append("d ");
+        if (hours > 0 || days > 0) uptimeStr.append(hours).append("h ");
+        uptimeStr.append(minutes).append("m ").append(seconds).append("s");
+
+        Map<String, Object> stats = new LinkedHashMap<>();
+        stats.put("status", "online");
+        stats.put("visitorCount", count);
+        stats.put("visitorCountFormatted", String.format(Locale.US, "%,d", count));
+        stats.put("serverStartTime", Instant.ofEpochMilli(SERVER_START_MS).toString());
+        stats.put("uptime", uptimeStr.toString());
+        stats.put("uptimeSeconds", totalSecs);
+        stats.put("activeDataset", currentInstance != null ? currentInstance.getDatasetName() : "None");
+        stats.put("datasetCount", dataRepository.getAllInstances().size());
+        stats.put("numExams", currentInstance != null ? currentInstance.getNumExams() : 0);
+        stats.put("numRooms", currentInstance != null ? currentInstance.getNumRooms() : 0);
+        stats.put("numStudents", currentInstance != null ? currentInstance.getTotalStudents() : 0);
+
+        sendJsonResponse(exchange, 200, stats);
     }
 
     private HeuristicAlgorithm getInitialAlgorithm(String code) {
