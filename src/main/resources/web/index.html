@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Examination Timetabling System</title>
+    <!-- Modern Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app-container">
+
+    <!-- Top Navigation Bar -->
+    <nav class="web-navbar">
+        <div class="nav-brand">
+            <div class="brand-logo">&#128197;</div>
+            <div class="brand-info">
+                <h1 data-i18n="app.title">Academic Examination Timetabling System</h1>
+                <span class="brand-tagline">Optimization & Scheduling Research Platform</span>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <!-- Buy Me a Coffee Button -->
+            <a href="https://buymeacoffee.com/selenazara" target="_blank" rel="noopener noreferrer" class="btn-bmc">
+                <span class="bmc-cup">&#9749;</span>
+                <span class="bmc-text">Buy Me a Coffee</span>
+            </a>
+
+            <div class="lang-pill-wrap">
+                <span class="lang-icon">&#127760;</span>
+                <label for="lang-select" style="display:none;">Language:</label>
+                <select id="lang-select" class="nav-select">
+                    <option value="en">English (EN)</option>
+                    <option value="ms">Bahasa Melayu (MS)</option>
+                    <option value="zh">中文 (ZH)</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contextual Platform Hero Banner -->
+    <div class="platform-hero-banner">
+        <div class="banner-badge">&#9432; System Formulation</div>
+        <div class="banner-content">
+            <strong>Generalized Examination Timetabling Platform:</strong> Designed for university scheduling with multi-campus venue allocation, travel distance constraints (Drp), course coincidence synchronization, and student clash minimization (closely matching the UMP benchmark dataset environment).
+        </div>
+    </div>
+
+    <!-- INLINE SECTION: 7-File Dataset Upload & Configuration Card (In-Page, No Popup Modal) -->
+    <section class="web-card upload-card" id="upload-inline-card">
+        <div class="card-header">
+            <div class="header-left">
+                <h2 class="card-title">
+                    <span>&#128194;</span> Custom Dataset Upload & 7-File Checklist
+                </h2>
+                <p class="card-subtitle">
+                    Upload your institution files (CSV or Tab-delimited TXT). The system dynamically allocates variable courses, students, and venues.
+                </p>
+            </div>
+            <div class="header-actions">
+                <button id="btn-toggle-sample-guide" class="btn btn-secondary btn-sm">
+                    &#128203; View Schema Guidelines
+                </button>
+                <button id="btn-load-sample-all" class="btn btn-success btn-sm font-bold">
+                    &#9889; Load Sample Dataset
+                </button>
+                <button id="btn-toggle-upload-panel" class="btn btn-secondary btn-sm">
+                    <span id="upload-panel-arrow">&#9650; Hide Panel</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body" id="upload-panel-body">
+            <!-- Sample Format Preview (Collapsible) -->
+            <div id="sample-guide-box" class="sample-guide-panel" style="display: none;">
+                <h4 style="font-size: 11px; margin-bottom: 4px; color: #334155; font-weight: 700;">Expected File Formats (Comma or Tab Delimited):</h4>
+                <pre class="code-preview">
+1. Campus File (campus.txt)        : subject, campus                  (e.g. G0001 G | P0001 P)
+2. Coincidence (coincidence.txt)   : subject1, subject2              (e.g. G0002 P0002 | G0004 P0004)
+3. Course File (course.txt)        : subject, total of student        (e.g. G0001 710 | G0002 689)
+4. Distance Matrix (distance.txt)  : room1, room2, distance matrix  (e.g. DBP DBP 0 | VBK02 VDK01 3)
+5. Room Info (roominfo.txt)        : block, campus, capacity, room    (e.g. D G 1019 DBP | A G 355 ASTAKA)
+6. Student File (student.txt)      : student id, subject              (e.g. PB15124 G0004 | PB16022 G0009)
+7. Timeslot File (timeslot.txt)    : subject, timetaken for exam      (e.g. G0001 90 | G0003 180)
+                </pre>
+            </div>
+
+            <!-- 7-File Checklist Table -->
+            <div class="checklist-table-wrap">
+                <table class="upload-checklist-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px; text-align: center;">Status</th>
+                            <th style="width: 180px;">File Type</th>
+                            <th>Expected Schema</th>
+                            <th style="width: 250px;">Choose Local File</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="row-file-campus">
+                            <td class="check-col"><input type="checkbox" id="chk-campus" disabled></td>
+                            <td><strong>1. Campus File</strong><br><small>campus.txt / .csv</small></td>
+                            <td><code>subject, campus</code></td>
+                            <td>
+                                <input type="file" id="file-input-campus" class="file-input-item" accept=".txt,.csv">
+                                <span class="file-status-text" id="status-campus">Not loaded</span>
+                            </td>
+                        </tr>
+                        <tr id="row-file-coincidence">
+                            <td class="check-col"><input type="checkbox" id="chk-coincidence" disabled></td>
+                            <td><strong>2. Coincidence</strong><br><small>coincidence.txt / .csv</small></td>
+                            <td><code>subject1, subject2</code></td>
+                            <td>
+                                <input type="file" id="file-input-coincidence" class="file-input-item" accept=".txt,.csv">
+                                <span class="file-status-text" id="status-coincidence">Not loaded</span>
+                            </td>
+                        </tr>
+                        <tr id="row-file-course">
+                            <td class="check-col"><input type="checkbox" id="chk-course" disabled></td>
+                            <td><strong>3. Course File</strong><br><small>course.txt / .csv</small></td>
+                            <td><code>subject, total of student</code></td>
+                            <td>
+                                <input type="file" id="file-input-course" class="file-input-item" accept=".txt,.csv">
+                                <span class="file-status-text" id="status-course">Not loaded</span>
+                            </td>
+                        </tr>
+                        <tr id="row-file-distance">
+                            <td class="check-col"><input type="checkbox" id="chk-distance" disabled></td>
+                            <td><strong>4. Distance Matrix</strong><br><small>distanceMatrix.txt / .csv</small></td>
+                            <td><code>room1, room2, distance</code></td>
+                            <td>
+                                <input type="file" id="file-input-distance" class="file-input-item" accept=".txt,.csv">
+                                <span class="file-status-text" id="status-distance">Not loaded</span>
+                            </td>
+                        </tr>
+                        <tr id="row-file-roominfo">
+                            <td class="check-col"><input type="checkbox" id="chk-roominfo" disabled></td>
+                            <td><strong>5. Room Info</strong><br><small>roominfo.txt / .csv</small></td>
+                            <td><code>block, campus, capacity, room</code></td>
+                            <td>
+                                <input type="file" id="file-input-roominfo" class="file-input-item" accept=".txt,.csv">
+                                <span class="file-status-text" id="status-roominfo">Not loaded</span>
+                            </td>
+                        </tr>
+                        <tr id="row-file-student">
+                            <td class="check-col"><input type="checkbox" id="chk-student" disabled></td>
+                            <td><strong>6. Student File</strong><br><small>student.txt / .csv</small></td>
+                            <td><code>student id, subject</code></td>
+                            <td>
+                                <input type="file" id="file-input-student" class="file-input-item" accept=".txt,.csv">
+                                <span class="file-status-text" id="status-student">Not loaded</span>
+                            </td>
+                        </tr>
+                        <tr id="row-file-timeslot">
+                            <td class="check-col"><input type="checkbox" id="chk-timeslot" disabled></td>
+                            <td><strong>7. Timeslot File</strong><br><small>timeslot.txt / .csv</small></td>
+                            <td><code>subject, timetaken for exam</code></td>
+                            <td>
+                                <input type="file" id="file-input-timeslot" class="file-input-item" accept=".txt,.csv">
+                                <span class="file-status-text" id="status-timeslot">Not loaded</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Bulk Drag & Drop -->
+            <div class="bulk-dropzone" id="bulk-dropzone">
+                <span class="dropzone-icon">&#128229;</span>
+                <span class="dropzone-text">Drag & drop all 7 dataset files here or click to browse</span>
+                <input type="file" id="bulk-files-input" multiple accept=".txt,.csv" style="display:none;">
+            </div>
+
+            <!-- Upload Footer Bar -->
+            <div class="upload-action-footer">
+                <div class="upload-summary-bar">
+                    <span id="upload-status-summary">0 of 7 files loaded. (Course and Student files are essential)</span>
+                </div>
+                <div class="upload-footer-buttons">
+                    <button id="btn-clear-uploaded" class="btn btn-secondary">Clear All</button>
+                    <button id="btn-apply-uploaded-dataset" class="btn btn-success font-bold">&#9889; Apply & Generate Conflict Matrix</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: Conflict Matrix Generator & Dataset Management Card -->
+    <section class="web-card conflict-card">
+        <div class="card-header">
+            <div class="header-left">
+                <h2 class="card-title" data-i18n="conflict.title">Conflict Matrix Inspector</h2>
+                <p class="card-subtitle" data-i18n="conflict.desc">
+                    Symmetric student clash matrix generated dynamically based on enrolled course registrations
+                </p>
+            </div>
+            <div class="header-actions">
+                <button id="btn-generate-conflict" class="btn btn-primary" data-i18n="conflict.generate_btn">
+                    <span>&#9889;</span> Generate Conflict Matrix
+                </button>
+                <button id="btn-export-conflict" class="btn btn-secondary" data-i18n="conflict.export_btn">
+                    <span>&#128229;</span> Export CSV
+                </button>
+                <button id="btn-scroll-to-upload" class="btn btn-success">
+                    <span>&#128194;</span> Upload Custom Dataset
+                </button>
+            </div>
+        </div>
+
+        <!-- Metrics Stats Cards Bar -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-icon">&#128218;</span>
+                <div class="stat-meta">
+                    <span class="stat-label">Total Courses</span>
+                    <span id="stat-num-courses" class="stat-value">-</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">&#127891;</span>
+                <div class="stat-meta">
+                    <span class="stat-label">Total Students</span>
+                    <span id="stat-num-students" class="stat-value">-</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">&#128279;</span>
+                <div class="stat-meta">
+                    <span class="stat-label">Conflict Edges</span>
+                    <span id="stat-conflict-edges" class="stat-value">-</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">&#128202;</span>
+                <div class="stat-meta">
+                    <span class="stat-label">Conflict Density</span>
+                    <span id="stat-conflict-density" class="stat-value">-</span>
+                </div>
+            </div>
+            <div class="stat-card highlight">
+                <span class="stat-icon">&#9888;</span>
+                <div class="stat-meta">
+                    <span class="stat-label">Max Student Clash</span>
+                    <span id="stat-max-clash" class="stat-value">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive 2D Conflict Matrix Preview Grid -->
+        <div class="conflict-matrix-preview-container" id="conflict-matrix-preview">
+            <table class="matrix-table" id="conflict-matrix-table">
+                <!-- Populated dynamically via JS -->
+            </table>
+        </div>
+    </section>
+
+    <!-- SECTION 1.5: Settings & Constraints Panel -->
+    <section class="web-card settings-card" id="settings-inline-card">
+        <div class="card-header" style="background-color: #f1f5f9;">
+            <div class="header-left">
+                <h2 class="card-title">&#9881; Optimization Parameters & Constraints</h2>
+                <p class="card-subtitle">Configure heuristic behaviors and enable/disable specific hard constraints</p>
+            </div>
+            <div class="header-actions">
+                <button id="btn-toggle-settings-panel" class="btn btn-secondary">
+                    <span id="settings-panel-arrow">&#9650; Hide Panel</span>
+                </button>
+            </div>
+        </div>
+        <div class="card-body" id="settings-panel-body" style="padding: 20px;">
+            <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+                <!-- Heuristics -->
+                <div style="flex: 1; min-width: 300px;">
+                    <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 15px; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">Heuristic Parameters</h4>
+                    <div class="form-group">
+                        <label for="setting-max-iter">Maximum Iterations (Metaheuristics):</label>
+                        <input type="number" id="setting-max-iter" class="form-input" value="10000" min="100" max="100000" step="500">
+                    </div>
+                    <div class="form-group">
+                        <label for="setting-lahc-lfa">LAHC History List Length (L_fa):</label>
+                        <input type="number" id="setting-lahc-lfa" class="form-input" value="500" min="10" max="5000" step="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="setting-schc-ls">SCHC Step Counter Length (L_s):</label>
+                        <input type="number" id="setting-schc-ls" class="form-input" value="500" min="10" max="5000" step="50">
+                    </div>
+                </div>
+
+                <!-- Hard Constraints -->
+                <div style="flex: 1; min-width: 280px;">
+                    <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 15px; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">Enabled Hard Constraints (H1-H7)</h4>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                        <label><input type="checkbox" id="chk-h1" checked> H1: Clash-free Timetable (Max 2 exams/period)</label>
+                        <label><input type="checkbox" id="chk-h2" checked> H2: Single Scheduled Period (Exam assigned once)</label>
+                        <label><input type="checkbox" id="chk-h3" checked> H3: Room Capacity Allowed (Enrolment <= Capacity)</label>
+                        <label><input type="checkbox" id="chk-h4" checked> H4: Single Room Usage per Period</label>
+                        <label><input type="checkbox" id="chk-h5" checked> H5: Correct Campus Allocation</label>
+                        <label><input type="checkbox" id="chk-h6" checked> H6: Synchronized Split Exams</label>
+                        <label><input type="checkbox" id="chk-h7" checked> H7: Large Exams Early (Students > 400 in early slots)</label>
+                    </div>
+                </div>
+
+                <!-- Soft Constraints -->
+                <div style="flex: 1; min-width: 280px;">
+                    <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 15px; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">Enabled Soft Constraints (S1-S4)</h4>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                        <label><input type="checkbox" id="chk-s1" checked> <strong>S1</strong>: Exam Spreading (Carter Proximity 1..5)</label>
+                        <label><input type="checkbox" id="chk-s2" checked> <strong>S2</strong>: Building Proximity (Split exam room distance)</label>
+                        <label><input type="checkbox" id="chk-s3" checked> <strong>S3</strong>: Minimization of Room Splitting</label>
+                        <label><input type="checkbox" id="chk-s4" checked> <strong>S4</strong>: Uniform Duration in Same Room</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; text-align: right; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                <button id="btn-save-setting" class="btn btn-primary font-bold">&#10004; Save Settings & Constraints</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: Optimization Workbench -->
+    <div class="workbench-grid">
+
+        <!-- Left Column: Controls & Algorithm Selection -->
+        <div class="workbench-controls">
+
+            <!-- Control Card -->
+            <div class="web-card panel-card">
+                <div class="card-header compact">
+                    <h3 class="panel-heading">System Control</h3>
+                    <div class="header-tools">
+                        <button id="btn-initialize" class="btn btn-sm btn-secondary" style="display: none;" data-i18n="control.initialize">&#8635; Initialize</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Initial Phase Card -->
+            <div class="web-card panel-card">
+                <div class="card-header compact">
+                    <h3 class="panel-heading" data-i18n="initial.phase">Initial Phase (Constructive Heuristics)</h3>
+                </div>
+                <div class="card-body">
+                    <div class="algo-pill-grid">
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="initial_algo" value="LD" checked>
+                            <span class="pill-label">LD <small>Largest Degree</small></span>
+                        </label>
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="initial_algo" value="LE">
+                            <span class="pill-label">LE <small>Largest Enrollment</small></span>
+                        </label>
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="initial_algo" value="LWD">
+                            <span class="pill-label">LWD <small>Largest Weighted</small></span>
+                        </label>
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="initial_algo" value="SD LD">
+                            <span class="pill-label">SD LD <small>Saturation Deg</small></span>
+                        </label>
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="initial_algo" value="SD LE">
+                            <span class="pill-label">SD LE <small>Saturation Enroll</small></span>
+                        </label>
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="initial_algo" value="SD LWD">
+                            <span class="pill-label">SD LWD <small>Saturation W-Deg</small></span>
+                        </label>
+                    </div>
+                    <button id="btn-initial-generate" class="btn btn-primary btn-block" data-i18n="initial.generate">
+                        <span>&#9654;</span> Run Initial Phase
+                    </button>
+                </div>
+            </div>
+
+            <!-- Improvement Phase Card -->
+            <div class="web-card panel-card">
+                <div class="card-header compact">
+                    <h3 class="panel-heading" data-i18n="improve.phase">Improvement Phase (Metaheuristics)</h3>
+                </div>
+                <div class="card-body">
+                    <div class="algo-pill-grid two-col">
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="improve_algo" value="HC Move" checked>
+                            <span class="pill-label">HC Move <small>Single Exam Move</small></span>
+                        </label>
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="improve_algo" value="HC Swap">
+                            <span class="pill-label">HC Swap <small>Exam Pair Swap</small></span>
+                        </label>
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="improve_algo" value="LAHC">
+                            <span class="pill-label">LAHC <small>Late Acceptance</small></span>
+                        </label>
+                        <label class="algo-radio-pill">
+                            <input type="radio" name="improve_algo" value="SCHC">
+                            <span class="pill-label">SCHC <small>Step Counting HC</small></span>
+                        </label>
+                    </div>
+                    <button id="btn-improve-generate" class="btn btn-primary btn-block" data-i18n="improve.generate">
+                        <span>&#9654;</span> Run Optimization
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Live Output & Solution Performance Metrics -->
+        <div class="workbench-terminal-wrap">
+            <div class="web-card terminal-card">
+                <div class="card-header compact">
+                    <div class="terminal-title">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                        <h3 class="panel-heading" style="margin-left: 6px;" data-i18n="output.title">Execution Output & Performance Comparison</h3>
+                    </div>
+                </div>
+
+                <!-- KPI Metric Pills -->
+                <div class="kpi-metrics-bar">
+                    <div class="kpi-box">
+                        <span class="kpi-label">Feasibility</span>
+                        <span id="metric-feasible" class="kpi-val">-</span>
+                    </div>
+                    <div class="kpi-box">
+                        <span class="kpi-label">Hard Violations</span>
+                        <span id="metric-hard" class="kpi-val">-</span>
+                    </div>
+                    <div class="kpi-box">
+                        <span class="kpi-label">Soft Penalty / Stud</span>
+                        <span id="metric-soft" class="kpi-val">-</span>
+                    </div>
+                    <div class="kpi-box">
+                        <span class="kpi-label">Compute Time</span>
+                        <span id="metric-time" class="kpi-val">-</span>
+                    </div>
+                </div>
+
+                <!-- Terminal Canvas -->
+                <div id="output-canvas" class="output-canvas">
+                    <div class="log-entry system">[SYSTEM READY] Select an algorithm or upload a custom dataset to begin.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SECTION 3: Timetable Representations & Actions -->
+    <div class="timetable-bar-wrap">
+        <div class="view-tabs">
+            <button id="btn-xit" class="btn btn-secondary view-tab-btn" data-i18n="timetable.xit">
+                <span>&#128197;</span> Xit Matrix (Exam &times; Period)
+            </button>
+            <button id="btn-yir" class="btn btn-secondary view-tab-btn" data-i18n="timetable.yir">
+                <span>&#127963;</span> Yir Matrix (Exam &times; Room)
+            </button>
+            <button id="btn-zrt" class="btn btn-secondary view-tab-btn" data-i18n="timetable.zrt">
+                <span>&#128337;</span> Zrt Matrix (Room &times; Period)
+            </button>
+        </div>
+        <div class="calc-action">
+            <button id="btn-calculate" class="btn btn-primary" data-i18n="timetable.calculate">
+                <span>&#129302;</span> Generate Timetable
+            </button>
+        </div>
+    </div>
+
+    <!-- SECTION 4: Schedule Results DataGrid -->
+    <section class="web-card results-card">
+        <div class="card-header">
+            <div class="header-left">
+                <h2 class="card-title" id="current-dataset-label">Examination Schedule DataGrid</h2>
+                <span id="row-count-display" class="table-badge"></span>
+            </div>
+            <div class="header-actions">
+                <div class="search-input-wrap">
+                    <span class="search-icon">&#128269;</span>
+                    <input type="text" id="table-search" class="search-input" placeholder="Search course code, room, campus...">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="web-datagrid" id="timetable-datagrid">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">No</th>
+                        <th data-i18n="table.course_code">Course Code</th>
+                        <th data-i18n="table.course_name">Course Name</th>
+                        <th data-i18n="table.enrollment">Enrollment</th>
+                        <th data-i18n="table.period">Period (t)</th>
+                        <th data-i18n="table.room">Room (r)</th>
+                        <th data-i18n="table.campus">Campus</th>
+                        <th data-i18n="table.conflicts">Conflicts</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="grid-tbody">
+                    <!-- Populated dynamically via JS -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Web Footer -->
+    <footer class="web-footer">
+        <div class="footer-left">
+            <span>Academic Examination Timetabling Platform</span> &bull; <span>Standard Constraints: Zero-Clash Hard Formulation & Carter Proximity Soft Formulation</span>
+        </div>
+        <div class="footer-right">
+            <a href="https://buymeacoffee.com/selenazara" target="_blank" rel="noopener noreferrer" class="footer-bmc-link">
+                ☕ Support on Buy Me a Coffee
+            </a>
+        </div>
+    </footer>
+
+</div>
+
+
+<!-- Matrix Viewer Modal Dialog (for Xit, Yir, Zrt representations) -->
+<div id="matrix-modal" class="modal-overlay">
+    <div class="modal-dialog" style="width: 880px; max-width: 95vw;">
+        <div class="modal-header">
+            <h3 class="modal-title" id="matrix-modal-title">Timetable Matrix Representation</h3>
+            <button id="btn-close-matrix" class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p id="matrix-modal-desc" class="modal-subtitle" style="margin-bottom: 12px;"></p>
+            <div class="modal-matrix-container">
+                <table class="web-datagrid" id="matrix-modal-table">
+                    <!-- Populated dynamically via JS -->
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="btn-export-matrix" class="btn btn-secondary">&#128229; Export CSV</button>
+            <button onclick="document.getElementById('matrix-modal').style.display='none'" class="btn btn-primary">Close</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/i18n.js?v=3"></script>
+<script src="js/timetable-grid.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
+</body>
+</html>
