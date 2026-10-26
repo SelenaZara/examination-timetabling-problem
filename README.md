@@ -2,7 +2,7 @@
 
 [![Java Version](https://img.shields.io/badge/Java-11%2B-blue.svg)](https://www.oracle.com/java/)
 [![Maven](https://img.shields.io/badge/Build-Maven-C71A36.svg?logo=apachemaven)](https://maven.apache.org/)
-[![Version](https://img.shields.io/badge/Version-2.4.0-informational.svg)]()
+[![Version](https://img.shields.io/badge/Release-v1.0.0-brightgreen.svg)](https://github.com/SelenaZara/examination-timetabling-problem/releases/tag/v1.0.0)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-orange.svg?logo=buy-me-a-coffee)](https://buymeacoffee.com/selenazara)
 
