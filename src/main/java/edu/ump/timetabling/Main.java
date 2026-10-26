@@ -19,10 +19,17 @@ public class Main {
     private static final int DEFAULT_PORT = 8080;
 
     public static void main(String[] args) {
+        // Port resolution: CLI arg > PORT env var (Render/Cloud) > default 8080
         int port = DEFAULT_PORT;
+        String portEnv = System.getenv("PORT");
         if (args.length > 0) {
             try {
                 port = Integer.parseInt(args[0]);
+            } catch (NumberFormatException ignored) {
+            }
+        } else if (portEnv != null && !portEnv.isEmpty()) {
+            try {
+                port = Integer.parseInt(portEnv);
             } catch (NumberFormatException ignored) {
             }
         }

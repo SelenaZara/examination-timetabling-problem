@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: examination-timetabling-problem
+    runtime: java
+    buildCommand: mvn package -q -DskipTests
+    startCommand: java -jar target/examination-timetabling-problem-2.4.0.jar
+    healthCheckPath: /
+    envVars:
+      - key: JAVA_VERSION
+        value: 11
